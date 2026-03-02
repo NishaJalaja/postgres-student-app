@@ -13,7 +13,7 @@ try:
 
     # Define student-specific SQL
     insert_query = """INSERT INTO student (studentId, studentname, age, grade) 
-                      VALUES (%d, %s, %d, %d)"""
+                      VALUES (%s, %s, %s, %s)"""
     record_to_insert = (1, 'Bob Johnson', 18, 3.8)
 
     cursor.execute(insert_query, record_to_insert)
