@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: EC2 with IAM Role and Secrets Manager access for Git cloning.
+
+Parameters:
+  RepoUrl:
+    Description: The URL of your Employee App GitHub repository
+    Type: String
+    Default: "https://github.com/nishajalaja/postgres-student-app.git"
+
+Resources:
+  # 1. Create the Key Pair (No need to create it manually in the console first)
+  MyEC2KeyPair:
+    Type: 'AWS::EC2::KeyPair'
+    Properties:
+      KeyName: StudentAppKey
+
+  # 2. Store GitHub Credentials in Secrets Manager
+  # Note: You must update the value in the console after creation or via CLI
+  GithubSecret:
+    Type: 'AWS::SecretsManager::Secret'
+    Properties:
+      Name: github/repo/credentials
+      Description: "GitHub PAT for cloning private repos"
+      SecretString: '{"token":"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"}'
+
+  # 3. Create IAM Role for EC2
+  EC2InstanceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [ec2.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      Policies:
+        - PolicyName: SecretsManagerReadPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: ['secretsmanager:GetSecretValue']
+                Resource: !Ref GithubSecret
+
+  # 4. Create Instance Profile (The bridge between Role and EC2)
+  EC2InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Roles: [!Ref EC2InstanceRole]
+
+  # 5. The EC2 Instance
+  PythonAppInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t3.micro
+      ImageId: ami-051f8b2110b52e9f0 # Amazon Linux 2023
+      KeyName: !Ref MyEC2KeyPair
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          dnf update -y
+          dnf install git jq python3-pip -y
+          
+                    
+          # Clone git
+          cd /home/ec2-user
+          git clone ${RepoUrl}
+          
+          cd postgres-employee-app
+          pip3 install psycopg2-binary
+          python3 studentinsert.py >> /var/log/app_execution.log 2>&1
