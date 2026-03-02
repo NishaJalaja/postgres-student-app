@@ -16,7 +16,7 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_DB: test
-          POSTGRES_PASSWORD: bhagavthi1
+          POSTGRES_PASSWORD: bhagavathi1
           POSTGRES_USER: dbadmin
         ports:
           - 5432:5432
