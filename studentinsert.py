@@ -5,7 +5,7 @@ try:
     connection = psycopg2.connect(
         user="dbadmin",
         password="bhagavathi1",
-        host="127.0.0.1",
+        host="my-test-postgres-db.ch4kq2860gzt.eu-north-1.rds.amazonaws.com",
         port="5432",
         database="test"
     )

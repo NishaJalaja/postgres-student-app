@@ -2,6 +2,10 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: EC2 with IAM Role and Secrets Manager access for Git cloning.
 
 Parameters:
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64'
+
   RepoUrl:
     Description: The URL of your Employee App GitHub repository
     Type: String
@@ -54,7 +58,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     Properties:
       InstanceType: t3.micro
-      ImageId: ami-051f8b2110b52e9f0 # Amazon Linux 2023
+      ImageId: !Ref LatestAmiId
       KeyName: !Ref MyEC2KeyPair
       IamInstanceProfile: !Ref EC2InstanceProfile
       UserData:
