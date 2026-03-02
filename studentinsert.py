@@ -1,5 +1,6 @@
 import psycopg2
 
+connection = None
 try:
     connection = psycopg2.connect(
         user="dbadmin",
