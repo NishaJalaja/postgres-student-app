@@ -17,4 +17,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # The command to run your service (update main.py to your entry file)
-CMD ["python", "main.py"]
+CMD ["python", "studentinsert.py"]
