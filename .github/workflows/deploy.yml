@@ -3,8 +3,8 @@ env:
 name: Deploy to Amazon ECS
 on:
   workflow_call: 
-  #push:
-    #branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
 jobs:
   deploy:
