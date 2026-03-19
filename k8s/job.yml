@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: my-python-app
+spec:
+  replicas: 1 # Runs on both of your t3.medium nodes
+  selector:
+    matchLabels:
+      app: python-app
+  template:
+    metadata:
+      labels:
+        app: python-app
+spec:
+  backoffLimit: 4
+  template:
+    spec:  
+      containers:
+      - name: app-container
+        image: 796174528069.dkr.ecr.eu-north-1.amazonaws.com/kubernetes-test:latest
+      restartPolicy: Never
+        #ports:
+        #- containerPort: 8080 # Change this to the port your Python app uses
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-python-service
+spec:
+  type: LoadBalancer # This creates a real AWS Load Balancer for you
+  selector:
+    app: python-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
