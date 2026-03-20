@@ -7,11 +7,16 @@ on:
     branches: [ "main" ]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+ deploy:
+    runs-on: eks-runner-set
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          repository: NishaJalaja/postgres-student-app
+          token: ${{ secrets.GH_PAT }}
+          ref: main
+          clean: true
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
