@@ -3,8 +3,13 @@ env:
 name: Deploy to Amazon ECS
 on:
   workflow_call: 
-  push:
-    branches: [ "main" ]
+    inputs:
+      target_repo:
+        required: true
+        type: string
+    secrets:
+        GH_PAT:
+          required: true
 
 jobs:
  deploy:
