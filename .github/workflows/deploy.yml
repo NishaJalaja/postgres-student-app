@@ -38,14 +38,7 @@ jobs:
           role-to-assume: arn:aws:iam::796174528069:role/GitHubActionRunnerRole 
           aws-region: us-east-1
 
-      - name: Debug Secret Presence
-        run: |
-          if [ -z "${{ secrets.AWS_REGION }}" ]; then
-            echo "AWS_REGION secret is EMPTY or NOT FOUND"
-            exit 1
-          else
-            echo "AWS_REGION secret is set (value is masked)"
-          fi
+      
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
