@@ -65,7 +65,7 @@ jobs:
       - name: Deploy to EKS
         run: |
           ls -R k8s/
-          kubectl delete job my-python-app --ignore-not-found
+          kubectl delete job postgres-student-insert --ignore-not-found
           IMAGE_URL="$FULL_IMAGE"
           # 2. Check if the file exists
           FILE_PATH="k8s/job.yml"
