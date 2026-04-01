@@ -21,7 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
-          repository: NishaJalaja/postgres-student-app
+          repository: ${{ inputs.target_repo }}
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: main
           clean: true
@@ -46,7 +46,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: kubernetes-test # Match your ECR name
+          ECR_REPOSITORY: student-app # Match your ECR name
           IMAGE_TAG: ${{ github.run_id }}-${{ github.run_attempt }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
