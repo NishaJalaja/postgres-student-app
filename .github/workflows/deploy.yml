@@ -66,6 +66,11 @@ jobs:
         run: |
           ls -R k8s/
           kubectl delete job my-python-app --ignore-not-found
-          export FULL_IMAGE_NAME="$FULL_IMAGE"
-          echo "Using Image: $FULL_IMAGE_NAME"
-          envsubst < $GITHUB_WORKSPACE/k8s/job.yml | kubectl apply -f -
+          IMAGE_URL="$FULL_IMAGE"
+          # 2. Check if the file exists
+          FILE_PATH="k8s/job.yml"
+          if [ ! -f "$FILE_PATH" ]; then
+            echo "ERROR: $FILE_PATH not found!"
+            exit 1
+          fi
+          sed "s|\${FULL_IMAGE_NAME}|$IMAGE_URL|g" "$FILE_PATH" | kubectl apply -f -
