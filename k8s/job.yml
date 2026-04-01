@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: my-python-app
+  name: postgres-student-insert
 spec:
   replicas: 1 # Runs on both of your t3.medium nodes
   selector:
@@ -17,7 +17,7 @@ spec:
     spec:  
       containers:
       - name: app-container
-        image: 796174528069.dkr.ecr.eu-north-1.amazonaws.com/kubernetes-test:latest
+        image: ${FULL_IMAGE_NAME}
       restartPolicy: Never
         #ports:
         #- containerPort: 8080 # Change this to the port your Python app uses
