@@ -51,6 +51,7 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "FULL_IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
       - name: Install AWS CLI
         run: |
           sudo apt-get update
@@ -65,4 +66,6 @@ jobs:
         run: |
           ls -R k8s/
           kubectl delete job my-python-app --ignore-not-found
-          kubectl apply -f $GITHUB_WORKSPACE/k8s/job.yml
+          export FULL_IMAGE_NAME="$FULL_IMAGE"
+          echo "Using Image: $FULL_IMAGE_NAME"
+          envsubst < $GITHUB_WORKSPACE/k8s/job.yml | kubectl apply -f -
