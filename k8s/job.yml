@@ -27,7 +27,7 @@ kind: Service
 metadata:
   name: my-python-service
 spec:
-  type: LoadBalancer # This creates a real AWS Load Balancer for you
+  type: ClusterIP # This creates a real AWS Load Balancer for you
   selector:
     app: python-app
   ports:
